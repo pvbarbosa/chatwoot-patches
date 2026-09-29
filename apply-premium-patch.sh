@@ -39,7 +39,13 @@ docker cp "$PATCHES_DIR/check_new_versions_job.rb" "$CID:/app/enterprise/app/job
 echo "[4/6] Aplicando reconcile_plan_config_service.rb..."
 docker cp "$PATCHES_DIR/reconcile_plan_config_service.rb" "$CID:/app/enterprise/app/services/internal/reconcile_plan_config_service.rb"
 
+echo "[4b/6] Aplicando zzz_premium_plan.rb (garante plano/features a cada boot)..."
+docker cp "$PATCHES_DIR/zzz_premium_plan.rb" "$CID:/app/config/initializers/zzz_premium_plan.rb"
+
 # Atualiza/configura o plano no banco de dados
+# OBS: na v4.16+ do fork, o boot regrava INSTALLATION_PRICING_PLAN via
+# Kanban::License (sem token => 'community'). O initializer zzz_premium_plan.rb
+# restaura para 'premium' em cada boot; este passo força o estado imediatamente.
 echo "[5/6] Configurando plano premium no banco de dados..."
 docker exec $CID sh -c 'cd /app && bundle exec rails runner "
   cfg = InstallationConfig.find_or_initialize_by(name: \"INSTALLATION_PRICING_PLAN\")

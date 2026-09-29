@@ -194,3 +194,17 @@ Dockerfile e no apply-premium-patch.sh. Serviços atualizados com
 **Validação:** `push_message` owner = `zzzz_push_proxiz.rb`; `PvbProxizPush`
 nos ancestrais; plano premium; HTTP 200. Aplica-se a novas notificações
 (browser push e FCM) — nada para refazer nos dispositivos.
+
+**Refinamento v2 (após teste com mensagem real):** o relato inicial ("chegou
+o nome, mas não a mensagem") tinha causa dupla: (a) a mensagem testada era
+mídia sem texto — conteúdo literal `"*Anderson Adelino:*\n"` + anexo, então
+não havia trecho para mostrar; (b) o nome do contato no Chatwoot
+(`"Claude Code | Anderson Adelino"`) difere do nome WhatsApp do remetente
+(`"*Anderson Adelino:*"` embutido no conteúdo pelo pipeline). Versão final:
+
+- 1:1: corpo sem remetente (remove `Nome:` do contato E o padrão WhatsApp
+  `*Qualquer Nome:*`); mídia = `🎤 Áudio: legenda` ou só o label.
+- Grupo (`@g.us`): mantém participante no corpo; mídia = `🎤 Áudio — Participante`.
+
+Testado com 4 casos reais do banco (1:1 texto, grupo texto, grupo áudio,
+mídia sem legenda).

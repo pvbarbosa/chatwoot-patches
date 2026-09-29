@@ -42,6 +42,9 @@ docker cp "$PATCHES_DIR/reconcile_plan_config_service.rb" "$CID:/app/enterprise/
 echo "[4b/6] Aplicando zzz_premium_plan.rb (garante plano/features a cada boot)..."
 docker cp "$PATCHES_DIR/zzz_premium_plan.rb" "$CID:/app/config/initializers/zzz_premium_plan.rb"
 
+echo "[4c/6] Aplicando zzzz_push_proxiz.rb (notificação estilo WhatsApp)..."
+docker cp "$PATCHES_DIR/zzzz_push_proxiz.rb" "$CID:/app/config/initializers/zzzz_push_proxiz.rb"
+
 # Atualiza/configura o plano no banco de dados
 # OBS: na v4.16+ do fork, o boot regrava INSTALLATION_PRICING_PLAN via
 # Kanban::License (sem token => 'community'). O initializer zzz_premium_plan.rb

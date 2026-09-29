@@ -173,3 +173,24 @@ docker service update --image ghcr.io/pvbarbosa/astrachat:v4.15.1-premium chatwo
   `zzz_premium_plan.rb` cobre o plano e as features a cada boot.
 - Espaço em disco: 41% usado (116G livres). Imagens antigas
   (`premium-next`, base v4.17.1) podem ser removidas se quiser liberar ~3 GB.
+
+## 14. Adendo (mesmo dia) — Notificações push estilo WhatsApp restauradas
+
+**Relato:** notificações mudaram após o update — antes mostravam que enviou e
+a mensagem (estilo WhatsApp); depois, padrão genérico do Chatwoot.
+
+**Causa:** a imagem v4.15.1 tinha um patch "Proxiz" aplicado direto no
+`app/services/notification/push_notification_service.rb` (título = nome do
+contato/grupo, corpo = conteúdo da mensagem, removendo o prefixo "Nome: " em
+conversas 1:1; mantido em grupos `@g.us`). O patch NÃO estava versionado no
+repo — o diff md5 entre imagens antiga/nova o revelou (comentário "Proxiz:").
+
+**Fix definitivo:** novo patch `patches/zzzz_push_proxiz.rb` — initializer
+`after_initialize` que faz `prepend` de um módulo sobrescrevendo
+`push_message` (mesma lógica original). Versionado no repo, incluído no
+Dockerfile e no apply-premium-patch.sh. Serviços atualizados com
+`docker service update --force` (recria container com mesma tag).
+
+**Validação:** `push_message` owner = `zzzz_push_proxiz.rb`; `PvbProxizPush`
+nos ancestrais; plano premium; HTTP 200. Aplica-se a novas notificações
+(browser push e FCM) — nada para refazer nos dispositivos.

@@ -19,4 +19,7 @@ COPY patches/reconcile_plan_config_service.rb  /app/enterprise/app/services/inte
 # do fork grava 'community' no DB quando nao ha token de licenca)
 COPY patches/zzz_premium_plan.rb               /app/config/initializers/zzz_premium_plan.rb
 
+# Notificacao push estilo WhatsApp (titulo=contato, corpo=mensagem)
+COPY patches/zzzz_push_proxiz.rb               /app/config/initializers/zzzz_push_proxiz.rb
+
 # Mantém o entrypoint original da imagem base

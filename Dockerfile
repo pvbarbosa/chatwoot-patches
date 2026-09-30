@@ -22,4 +22,8 @@ COPY patches/zzz_premium_plan.rb               /app/config/initializers/zzz_prem
 # Notificacao push estilo WhatsApp (titulo=contato, corpo=mensagem)
 COPY patches/zzzz_push_proxiz.rb               /app/config/initializers/zzzz_push_proxiz.rb
 
+# Service worker com body nas notificacoes (v4.17.1 do fork regrediu e nao exibia o texto)
+COPY patches/sw.js                             /app/public/sw.js
+COPY patches/sw.js                             /app/public/packs/sw.js
+
 # Mantém o entrypoint original da imagem base

@@ -11,7 +11,8 @@ chatwoot-patches/
 │   ├── check_new_versions_job.rb        # Remove overwrite do plano pelo hub
 │   ├── reconcile_plan_config_service.rb # No-op no reconciliador de planos
 │   ├── zzz_premium_plan.rb              # Garante plano+features premium a cada boot (v4.16+)
-│   └── zzzz_push_proxiz.rb              # Push estilo WhatsApp (título=contato, corpo=mensagem)
+│   ├── zzzz_push_proxiz.rb              # Push estilo WhatsApp (título=contato, corpo=mensagem)
+│   └── sw.js                            # Service worker com body (v4.17.1 não exibia o texto)
 ├── Dockerfile                           # Builda imagem com patches inclusos
 ├── apply-premium-patch.sh               # Script para aplicar após atualizações
 └── README.md                            # Este arquivo
@@ -71,6 +72,7 @@ O script:
 | `reconcile_plan_config_service.rb` | Serviço de reconciliação não desabilita mais features premium |
 | `zzz_premium_plan.rb` | Initializer que restaura plano premium + features premium após cada boot (o enforce de licença do fork grava 'community' quando não há token) |
 | `zzzz_push_proxiz.rb` | Notificação push estilo WhatsApp: título = nome do contato/grupo, corpo = conteúdo da mensagem (mantém "Nome:" apenas em grupos @g.us) |
+| `sw.js` | Adiciona `body` ao `showNotification` (a v4.17.1 do fork removeu e o Chrome mostrava só o título). Aplicado em `/sw.js` e `/packs/sw.js` |
 
 ## ✅ Verificação
 

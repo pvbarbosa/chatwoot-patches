@@ -208,3 +208,18 @@ não havia trecho para mostrar; (b) o nome do contato no Chatwoot
 
 Testado com 4 casos reais do banco (1:1 texto, grupo texto, grupo áudio,
 mídia sem legenda).
+
+**Causa raiz final no Chrome (30/09):** o service worker da v4.17.1 do fork
+**regrediu** — `showNotification(title, { tag, data })` sem `body`, então o
+Chrome nunca exibia o texto da mensagem (só o título). O backend gerava o
+payload correto (verificado: `body: "olá"` numa notificação real). Fix:
+`patches/sw.js` com `body: notification.body`, aplicado em `/sw.js` e
+`/packs/sw.js` via Dockerfile. IMPORTANTE: o Chrome mantém o SW antigo em
+memória — fechar todas as abas do site e reabrir para trocar. Também vale
+verificar `/packs/sw.js` no DevTools > Application > Service Workers.
+
+Nota sobre os canais: VAPID_KEYS existe (browser push ativo); Firebase/
+FIREBASE_CREDENTIALS ausentes, mas o relay do ChatwootHub
+(`/send_push` → projeto FCM do fork) funciona (HTTP 200 + message name).
+Subscriptions antigas: fcm 17/06, browser 11/08 e 14/08 — se o celular
+não receber, re-registrar o app (logout/login no perfil).
